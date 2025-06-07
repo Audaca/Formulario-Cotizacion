@@ -1,0 +1,156 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formulario de Cotización</title>
+  <style>
+    body { font-family: Arial, sans-serif; }
+    .fondo-oscuro {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5); display: flex;
+      align-items: center; justify-content: center; z-index: 9999;
+    }
+    .ventana-flotante {
+      background: white; padding: 20px; border-radius: 10px;
+      width: 95%; max-width: 1100px; max-height: 90%; overflow-y: auto;
+    }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+    th { background-color: #f2f2f2; }
+    input, select {
+      width: 100%; padding: 5px;
+      box-sizing: border-box;
+    }
+    .botones {
+      margin-top: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .botones button {
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+    }
+    .botones button:hover {
+      background-color: #0056b3;
+    }
+    .campos-superiores {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .campos-superiores input {
+      flex: 1;
+    }
+  </style>
+</head>
+<body>
+
+<div class="fondo-oscuro" id="popup">
+  <div class="ventana-flotante" id="formulario">
+    <h2>Solicitud de Cotización</h2>
+
+    <div class="campos-superiores">
+      <input type="text" placeholder="Nombre del cliente" id="cliente">
+      <input type="email" placeholder="Correo electrónico" id="correo">
+      <input type="date" id="fecha">
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>CATEGORÍA / PRODUCTO</th>
+          <th>CANTIDAD</th>
+          <th>Ancho</th>
+          <th>Alto</th>
+          <th>Fondo</th>
+          <th>PAPEL</th>
+          <th>TINTAS</th>
+          <th>ACABADOS</th>
+          <th>ACABADOS</th>
+        </tr>
+      </thead>
+      <tbody id="tabla-body">
+      </tbody>
+    </table>
+
+    <div class="botones">
+      <button onclick="agregarFila()">Agregar fila</button>
+      <button onclick="imprimir()">Imprimir / PDF</button>
+      <button onclick="enviarWhatsApp()">Enviar por WhatsApp</button>
+      <button onclick="cerrarVentana()">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const opcionesPapel = ["Couché", "Obra", "Cartulina", "Reciclado"];
+const opcionesTintas = ["Color", "Blanco y negro"];
+const opcionesAcabados = ["Brillo", "Mate", "Laminado", "Troquelado"];
+
+function agregarFila() {
+  const tabla = document.getElementById("tabla-body");
+  const fila = document.createElement("tr");
+
+  fila.innerHTML = `
+    <td>
+  <select>
+    <option>Tarjetas de presentación</option>
+    <option>Volantes</option>
+    <option>Afiches</option>
+    <option>Stickers</option>
+    <option>Etiquetas</option>
+    <option>Carpetas</option>
+    <option>Revistas</option>
+    <option>Catálogos</option>
+    <option>Empaques</option>
+    <option>Otros</option>
+  </select>
+</td>
+    <td><input type="number"></td>
+    <td><input type="number"></td>
+    <td><input type="number"></td>
+    <td><input type="number"></td>
+    <td>${crearSelect(opcionesPapel)}</td>
+    <td>${crearSelect(opcionesTintas)}</td>
+    <td>${crearSelect(opcionesAcabados)}</td>
+    <td>${crearSelect(opcionesAcabados)}</td>
+  `;
+
+  tabla.appendChild(fila);
+}
+
+function crearSelect(opciones) {
+  return `<select>${opciones.map(op => `<option value="${op}">${op}</option>`).join('')}</select>`;
+}
+
+function imprimir() {
+  window.print();
+}
+
+function cerrarVentana() {
+  document.getElementById("popup").style.display = "none";
+}
+
+function enviarWhatsApp() {
+  const nombre = document.getElementById("cliente").value;
+  const correo = document.getElementById("correo").value;
+  const fecha = document.getElementById("fecha").value;
+  const mensaje = `Cotización de ${nombre}, Email: ${correo}, Fecha: ${fecha}`;
+  const numero = "573044392914"; // Colombia
+  const url = `https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}`;
+  window.open(url, '_blank');
+}
+
+// Inicializar con una fila
+agregarFila();
+</script>
+
+</body>
+</html>
